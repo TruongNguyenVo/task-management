@@ -10,15 +10,16 @@ class TaskCreation(models.Model):
 	startDate = models.DateTimeField(default = datetime.now, blank = True) # ngày tạo task, lấy mặc định
 	endDate = models.DateTimeField() #ngày kết thúc task
 	isImportant = models.BooleanField(default = False) # task có quan trong hay khong
-	emailUSer = models.EmailField(max_length = 255, default = None) # email người nhận task
-	phoneUser = models.CharField(max_length = 255, default = None)
-	note = models.TextField(default = None) # ghi chú
+	emailUSer = models.EmailField(max_length = 255, blank = True) # email người nhận task
+	phoneUser = models.CharField(max_length = 255, blank = True)
+	note = models.TextField(blank = True) # ghi chú
+	status = models.BooleanField(default = False)
 
 class TaskAssignMent(models.Model):
 	 # phân công công việc
 	nameUser = models.CharField(max_length = 255) #người nhận task
 	emailUSer = models.EmailField(max_length = 255) # email người nhận task
-	phoneUser = models.CharField(max_length = 255, default = None)
+	phoneUser = models.CharField(max_length = 255, blank = True)
 	date = models.DateTimeField(default = datetime.now, blank = True) # lấy thời gian giao hiện tại, mặc định không thể sửa
 	note = models.CharField(max_length = 255) # các điểm cần chú ý khi thực hiện task do người phân công nhắn
 

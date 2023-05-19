@@ -4,7 +4,9 @@
 	<title>Page Create Task</title>
 </head>
 <body>
-	<form>
+	<form method="POST" action="createTask">
+		{% csrf_token %}
+
 <!-- 	name task -->
 		<label for="nameTask">Name Task:	</label>
 	<input type="text" name="nameTask">
@@ -15,7 +17,7 @@
 	<br>
 <!-- 	date end task -->
 		<label for="endDate">Date finish date:	</label>
-	<input type="date" name="endDate" >
+	<input type="datetime-local" name="endDate" >
 	<br>
 <!-- 	task is important or not -->
 	<label for="isImportant">Important:	</label>

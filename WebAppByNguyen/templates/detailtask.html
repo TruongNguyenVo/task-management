@@ -5,13 +5,19 @@
 </head>
 <body>
 	<div name= "detail">
-		<label>Name Task: _nameTask</label> <br>
-		<label>Datail Task: _dataTask</label> <br>
-		<label>Date Create: _startDate</label> <br>
-		<label>Date End Task: _endDate</label> <br>
-		<label>Important: _isImportant</label> <br>
-		<label>Note: _note</label> <br>
-		<a href="home">Home</a>
+		
+		<label>Name Task: {{nameTask}}</label> <br>
+		<label>Datail Task: {{dataTask}}</label> <br>
+		<label>Date Create: {{startDate}}</label> <br>
+		<label>Date End Task: {{endDate}}</label> <br>
+
+		{% if isImportant == True %}
+			<label>Important: Yes</label> <br>
+		{% endif %}
+
+		<label>Note: {{note}}</label> <br>
+
+		<a href="/">Home</a>
 	</div>
 </body>
 </html>

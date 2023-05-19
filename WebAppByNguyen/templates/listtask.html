@@ -4,11 +4,31 @@
 	<title>Page List Task</title>
 </head>
 <body>
-	<div name = "task">
-	<label>Name task: </label> <br>
-	<label>Status task: </label> <br>
-	<label>The rest of the time: </label> <br>
-	<a href="getTask">Detail Task</a>
-	</div>
+
+	{% for task in task_status %}
+	{% comment %}
+  		task: name - 0, status - 1, timeRest -2
+	{% endcomment %}
+
+			<form method="GET" action="getTask">
+				<div>
+					<label>Name task: {{task.0}}</label> <br>
+
+					{% if task.1 == True %}
+					  <label>Status: Done task</label>
+					{% else %}
+					  <label>Status: In processing</label>
+					{% endif %}
+					<br>
+
+					<label>The rest of the time: {{task.2.0}} days {{task.2.1}} hours {{task.2.2}} minutes</label> <br>
+					
+					<a href="getTask/{{task.3}}">Detail task: {{task.0}}</a>
+				</div>
+				<br>
+			</form>
+
+	{% endfor %}
+
 </body>
 </html>
