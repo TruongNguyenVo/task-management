@@ -2,24 +2,27 @@
 <html>
 <head>
 	<title>Page List Task</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-
 	{% for task in task_status %}
 	{% comment %}
   		task: name - 0, status - 1, timeRest -2
 	{% endcomment %}
-
+		{% if task.2.0 >= 0 %} 
+<!-- 		hiện thị các task còn thời gian -->
 			<form method="GET" action="getTask">
 				<div>
-					<label>Name task: {{task.0}}</label> <br>
+					<label>Name task: {{task.0}} --</label> 
 
 					{% if task.1 == True %}
-					  <label>Status: Done task</label>
+					  <label>Status: Done task --</label>
 					{% else %}
-					  <label>Status: In processing</label>
+					  <label>Status: In processing --</label>
 					{% endif %}
-					<br>
+					
 
 					<label>The rest of the time: {{task.2.0}} days {{task.2.1}} hours {{task.2.2}} minutes</label> <br>
 					
@@ -27,8 +30,10 @@
 				</div>
 				<br>
 			</form>
+		{% endif %}
 
 	{% endfor %}
-
+	<a href="/listTaskDone">List Task Done</a>
+<!-- 	<h1>Temp : {{temp}}</h1> -->
 </body>
 </html>

@@ -2,8 +2,13 @@
 <html>
 <head>
 	<title>Page Detail Task _nameTask</title>
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
+	<form method="POST">
+		{% csrf_token %}
 	<div name= "detail">
 		
 		<label>Name Task: {{nameTask}}</label> <br>
@@ -16,8 +21,12 @@
 		{% endif %}
 
 		<label>Note: {{note}}</label> <br>
-
-		<a href="/">Home</a>
+		
+		<button type="submit" name="taskDone" value="Done">Done</button><br>
+		<a href="/">Home</a><br>
+		<a href="/listTaskDone">List Task Done</a>		
 	</div>
+	</form>
+<!-- 	<h1>Temp : {{temp}}</h1> -->
 </body>
 </html>

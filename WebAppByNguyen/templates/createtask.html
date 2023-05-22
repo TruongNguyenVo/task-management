@@ -2,43 +2,64 @@
 <html>
 <head>
 	<title>Page Create Task</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<form method="POST" action="createTask">
 		{% csrf_token %}
 
+
 <!-- 	name task -->
+<div class="input-group">
 		<label for="nameTask">Name Task:	</label>
 	<input type="text" name="nameTask">
 	<br>
+</div>
 <!-- 	data task -->
+<div class="form-group">
 		<label for="dataTask">Data Task:	</label>
-	<textarea name="dataTask"></textarea>
-	<br>
+	<textarea name="dataTask"  style="resize: none;"></textarea>
+	<br></div>
 <!-- 	date end task -->
+<div class="form-group">
 		<label for="endDate">Date finish date:	</label>
 	<input type="datetime-local" name="endDate" >
-	<br>
+	<br></div>
+<div>
 <!-- 	task is important or not -->
 	<label for="isImportant">Important:	</label>
 	<input type="checkbox" name="isImportant">
 
-	<br>
+	<br></div>
+<div class="form-group">
 <!-- 	email user do task -->
 		<label for="emailUSer">Email:	</label>
 	<input type="text" name="emailUSer">
-	<br>
+	<br></div>
+<div class="form-group">
 <!-- 	phone user do task -->
 			<label for="phoneUser">Phone:	</label>
 	<input type="text" name="phoneUser">
-	<br>
+	<br></div>
+<div class="form-group">
 <!-- 	note user create -->
 			<label for="note">Note:	</label>
-	<textarea name="note">
+	<textarea name="note"  style="resize: none;">
 	</textarea>
-	<br>
-	<input type="submit" value="Submit"><br>
-	<a href="listTask">List Task Created</a>
+	<br></div>
+<div class="form-group">
+	<input type="submit" value="Create"><br></div>
+<div>
+	<a href="listTask">List Task Created</a><br>
+	<a href="/listTaskDone">List Task Done</a><br>
+	<a href="/">Home</a></div>
 	</form>
+{% comment %}
+	thông báo tạo task
+{% endcomment %}
+	<h1>{{temp}}</h1>
+<h1></h1>
 </body>
 </html>
