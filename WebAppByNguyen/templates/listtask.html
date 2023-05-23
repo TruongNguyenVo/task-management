@@ -11,7 +11,7 @@
 	{% comment %}
   		task: name - 0, status - 1, timeRest -2
 	{% endcomment %}
-		{% if task.2.0 >= 0 %} 
+
 <!-- 		hiện thị các task còn thời gian -->
 			<form method="GET" action="getTask">
 				<div>
@@ -30,7 +30,7 @@
 				</div>
 				<br>
 			</form>
-		{% endif %}
+
 
 	{% endfor %}
 	<a href="/listTaskDone">List Task Done</a>

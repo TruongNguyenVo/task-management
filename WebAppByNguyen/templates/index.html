@@ -1,7 +1,10 @@
-<!DOCTYPE html>
+{% load static %}
+
 <html>
 <head>
 	<title>Page Home</title>
+	<script src="{% static 'index.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'index.css' %}">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -9,5 +12,13 @@
 <body>
 	<h1>{{message}}</h1>
 	<a href="createTask">Create Task</a>
+
+<!-- 	<ul class="notifications"></ul>
+    <div class="buttons">
+      <button class="btn" id="success">Success</button>
+      <button class="btn" id="error">Error</button>
+      <button class="btn" id="warning">Warning</button>
+      <button class="btn" id="info">Info</button>
+    </div> -->
 </body>
 </html>

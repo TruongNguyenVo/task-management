@@ -6,6 +6,7 @@ from datetime import datetime
 from django.contrib.auth.models import User, auth
 from django.shortcuts import redirect
 from django.utils.datastructures import MultiValueDictKeyError
+from time import time
 #my models
 from .modelsByNguyen import *	
 # Create your views here.
@@ -40,11 +41,13 @@ def createTask(request):
 			'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,note]
 		}
 		#	['task 1', 'Detail task 1', '2023-05-18T23:09', 'on', 'lammai.0407@gmail.com', '0944058941', 'can than']
+		delay(0.3)
 		return redirect('listTask')
 	else:
 		context = {
 			# 'temp' : "else"
 		}
+		delay(0.3)
 		return render(request, 'createtask.html', context)
 
 def listTask(request): #trang hiển thị các nhiệm vụ
@@ -94,6 +97,7 @@ def getTask(request, id):
 		'endDate' : task.endDate,
 		'isImportant' : task.isImportant,
 		'note' : task.note,
+		'id' : task.id,
 		'temp' : message,
 	}
 
@@ -118,4 +122,69 @@ def listTaskDone(request): #hàm trả về các task đã done hoặc hết h�
 	template = loader.get_template('taskdone.html')
 	return HttpResponse(template.render(context, request)) 
 
+def editTask(request, id):
+
+
+	task = TaskCreation.objects.get(id = id)
+	template = loader.get_template("edit.html")
+
+
+	message = ""
+
+	try:
+	# nếu user click done task thì cập nhật endDate và status
+		if request.POST["taskDone"] == "Done":
+			task.endDate = datetime.now()
+			task.status = True
+			task.save()
+			message = "task is successful !"
+	except MultiValueDictKeyError:
+			message = ""
+	
+	context = {
+		'nameTask' : task.nameTask,
+		'dataTask' : task.dataTask,
+		'endDate' : task.endDate,
+		'isImportant' : task.isImportant,
+		'phoneUser': task.phoneUser,
+		'emailUser' : task.emailUSer,
+		'note' : task.note,
+		'temp' : task.endDate,
+	}
+
+	if request.method == 'POST':
+		#get value in createtask.html
+		nameTask = request.POST['nameTask']
+		dataTask = request.POST['dataTask']
+
+		endDate = request.POST['endDate']
+		if endDate == "":
+			endDate = task.endDate
+		try:
+			if request.POST['isImportant'] == 'on': 
+			# if task is important -> on
+				isImportant = True
+		except MultiValueDictKeyError:
+			isImportant = False
+		emailUSer = request.POST['emailUSer']
+		phoneUser = request.POST['phoneUser']
+
+		note = request.POST['note']
+		edit_task = TaskCreation.objects.filter(id=id).update(
+				nameTask = nameTask,
+				dataTask = dataTask,
+				endDate = endDate,
+				isImportant = isImportant,
+				emailUSer = emailUSer,
+				phoneUser = phoneUser,
+				)
+
+		context = {
+			# 'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,note]
+			'temp' : "updated"
+		}
+		#	['task 1', 'Detail task 1', '2023-05-18T23:09', 'on', 'lammai.0407@gmail.com', '0944058941', 'can than']
+		return redirect('listTask')
+
+	return HttpResponse(template.render(context, request))
 

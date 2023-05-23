@@ -3,12 +3,16 @@
 #class thì viết hoa hết
 
 import psycopg2
+import time
+def delay(timeDelay):
+	time.sleep(float(timeDelay))
 def days_hours_minutes(td): # hiển thị về ngày giờ phút
     return td.days, td.seconds//3600, (td.seconds//60)%60
 def munis(startDate, endDate): # trừ hai mốc thời gian gồm ngày tháng năm giờ phút giây
 	startDate = startDate.replace(tzinfo=None)
 	endDate = endDate.replace(tzinfo=None)
 	return endDate - startDate
+
 def connectDB():
 	conn = psycopg2.connect(
 		host = "localhost",
