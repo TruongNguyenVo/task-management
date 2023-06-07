@@ -7,5 +7,6 @@ urlpatterns =[
 	path('getTask/<int:id>', views.getTask, name = 'getTask'),
 	path('editTask/<int:id>', views.editTask, name = 'editTask'),
 	path('listTaskDone', views.listTaskDone, name = 'listTaskDone'),
+	path('test', views.test, name = 'test'),
 	# path('detailTask/<str:task>/', views.getTask, name = 'getTask'),
 ]

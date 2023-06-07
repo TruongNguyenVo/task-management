@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from .models import TaskCreation, TaskTracking, TaskDone
+from .models import TaskCreation
 from datetime import datetime
 from django.contrib.auth.models import User, auth
 from django.shortcuts import redirect
@@ -47,11 +47,12 @@ def createTask(request):
 		context = {
 			# 'temp' : "else"
 		}
-		delay(0.3)
 		return render(request, 'createtask.html', context)
 
 def listTask(request): #trang hiển thị các nhiệm vụ
-	
+	typeTask = 'doing'
+	if request.method == "POST":
+		typeTask = request.POST.get('type')
 	task_status = [] # gồm 3 tham số: name, status, timeRests
 	task_list = TaskCreation.objects.all()
 	time_now = datetime.now()
@@ -69,7 +70,7 @@ def listTask(request): #trang hiển thị các nhiệm vụ
 	
 	context = { 
 		'task_status': task_status,
-		# 'temp' : connectDB() 
+		'typeTask' : typeTask
 	}
 	return HttpResponse(template.render(context, request)) 
 def getTask(request, id):
@@ -81,14 +82,21 @@ def getTask(request, id):
 	message = ""
 
 	try:
-	# nếu user click done task thì cập nhật endDate và status
+	# nếu user click done task thì cập nhật finishDate và status
 		if request.POST["taskDone"] == "Done":
-			task.endDate = datetime.now()
+			delay(0.3)
+			task.finishDate = datetime.now()
 			task.status = True
 			task.save()
 			message = "task is successful !"
-	except MultiValueDictKeyError:
-			message = ""
+			return redirect("listTaskDone")
+		# if request.POST["taskDont"] == "Dont":
+		# 	delay(0.3)
+		# 	task.status = False
+		# 	task.save()
+		# 	return redirect("listTaskDone")
+	except MultiValueDictKeyError as e:
+			message = e
 	
 	context = {
 		'nameTask' : task.nameTask,
@@ -98,9 +106,8 @@ def getTask(request, id):
 		'isImportant' : task.isImportant,
 		'note' : task.note,
 		'id' : task.id,
-		'temp' : message,
+		'temp' : "Hdasdas",
 	}
-
 
 	return HttpResponse(template.render(context, request)) 
 def listTaskDone(request): #hàm trả về các task đã done hoặc hết hạn
@@ -110,8 +117,7 @@ def listTaskDone(request): #hàm trả về các task đã done hoặc hết h�
 	for task in task_list:
 		if task.status == True:
 			tempTask = []
-			timeEnd = task.endDate
-			tempTask = [task.nameTask, task.dataTask, timeEnd]
+			tempTask = [task.nameTask, task.dataTask, task.finishDate]
 			task_status.append(tempTask)
 			# temp = task.endDate
 	
@@ -187,4 +193,13 @@ def editTask(request, id):
 		return redirect('listTask')
 
 	return HttpResponse(template.render(context, request))
-
+def test(request):
+	if request.method == "POST":
+		typeTask = request.POST.get('type')
+	else:
+		typeTask = "doing"
+	template = loader.get_template("template.html")
+	context = {
+			'temp' : typeTask,
+		}
+	return HttpResponse(template.render(context, request))

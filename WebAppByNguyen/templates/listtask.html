@@ -7,13 +7,27 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-	{% for task in task_status %}
+	 <form method="POST" action="listTask">
+		{% csrf_token %}
+	<label for="type">Type task:</label>
+	<select name="type">
+	  <option value="" selected="selected" hidden="hidden">Choose here</option>
+	  <option value="doing" >Task in processing</option>
+	  <option value="donot">Task do not finish</option>
+	</select>
+	<button type="submit">Submit</button>
+
+	</form>
+	{% comment %} Doing Task {% endcomment %}
+	{% if typeTask == 'doing' %}
+			{% for task in task_status %}
+			
 	{% comment %}
   		task: name - 0, status - 1, timeRest -2
 	{% endcomment %}
-
+	{% if task.1 == False and task.2.0 > 0 %}
 <!-- 		hiện thị các task còn thời gian -->
-			<form method="GET" action="getTask">
+			<form method="POST" action="getTask">
 				<div>
 					<label>Name task: {{task.0}} --</label> 
 
@@ -30,10 +44,37 @@
 				</div>
 				<br>
 			</form>
+			{% endif %}
 
+			{% endfor %}
+			<a href="/listTaskDone">List Task Done</a>
+			</form>
+	{% elif typeTask == 'donot' %} 
+				{% for task in task_status %}
+	{% comment %}
+  		task: name - 0, status - 1, timeRest -2
+	{% endcomment %}
+	{% if task.2.0 < 0 and task.1 == False %}
+<!-- 		hiện thị các task còn thời gian -->
+			<form method="POST" action="getTask">
+				<div>
+					<label>Name task: {{task.0}} --</label> 
+					<label>Status: Do not finish task --</label>
 
-	{% endfor %}
-	<a href="/listTaskDone">List Task Done</a>
+					<label>Time: {{task.2.0}} days {{task.2.1}} hours {{task.2.2}} minutes</label> <br>
+					
+					<a href="getTask/{{task.3}}">Detail task: {{task.0}}</a>
+				</div>
+				<br>
+			</form>
+			{% endif %}
+
+			{% endfor %}
+			<a href="/listTaskDone">List Task Done</a>
+			</form>
+	{% endif %}
+
+	
 <!-- 	<h1>Temp : {{temp}}</h1> -->
 </body>
 </html>

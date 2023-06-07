@@ -6,9 +6,21 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+h1{
+  background-color: red;
+}
 .btn{
-	color: red;
-	background-color: blue;
+  color: yellow;
+  background-color: blue;
+}
+.temp{
+  background-color: red;
+  color: yellow;
+}
+#temp{
+  background-color: yellow;
+  color: red;
+  border:1px solid #ffffff;
 }
 :root {
   --dark: #34495E;
@@ -17,6 +29,10 @@
   --error: #E24D4C;
   --warning: #E9BD0C;
   --info: #3498DB;
+}
+h1{
+  background-color: red;
+  color: yellow;
 }
 body {
   display: flex;
@@ -155,3 +171,5 @@ body {
     padding: 8px 15px;
   }
 }
+
+

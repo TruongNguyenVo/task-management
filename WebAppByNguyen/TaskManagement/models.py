@@ -1,6 +1,5 @@
 from django.db import models
-from datetime import datetime
-
+from datetime import datetime, timedelta
 # Create your models here.
 
 class TaskCreation(models.Model): 
@@ -9,10 +8,11 @@ class TaskCreation(models.Model):
 	dataTask = models.TextField(max_length = 10000) #nội dung 
 	startDate = models.DateTimeField(default = datetime.now, blank = True) # ngày tạo task, lấy mặc định
 	endDate = models.DateTimeField() #ngày kết thúc task
+	finishDate = models.DateTimeField(default = datetime.now) # ngày hoàn thành 
 	isImportant = models.BooleanField(default = False) # task có quan trong hay khong
 	emailUSer = models.EmailField(max_length = 255, blank = True) # email người nhận task
 	phoneUser = models.CharField(max_length = 255, blank = True)
-	note = models.TextField(blank = True) # ghi chú
+	note = models.TextField( blank = True) # ghi chú
 	status = models.BooleanField(default = False)
 
 class TaskAssignMent(models.Model):

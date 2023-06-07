@@ -1,7 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Page Detail Task _nameTask</title>
+		<script src="{% static 'index.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'index.css' %}">
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -22,12 +25,18 @@
 
 		<label>Note: {{note}}</label> <br>
 		
-		<button type="submit" name="taskDone" value="Done">Done</button><br>
+			<ul class="notifications"></ul>
+    	<div class="buttons">
+      		<button type="submit" class="btn" id="success" name="taskDone" value="Done">Done</button>
+    	</div><br>
+<!--     	<div class="buttons">
+      		<button type="submit" class="btn" id="success" name="taskDont" value="Dont">Dont</button>
+    	</div><br> -->
 		<a href="/">Home</a><br>
 		<a href="/listTaskDone">List Task Done</a><br>
 		<a href="/editTask/{{id}}">Edit</a>	
 	</div>
 	</form>
-<!-- 	<h1>Temp : {{temp}}</h1> -->
+
 </body>
 </html>

@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test Page</title>
+	<script src="{% static 'index.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+	<h1>HELLO</h1>
+	<div id="temp">HELLO EVERYBODY</div>
+	<ul class="notifications1"></ul>
+    <div class="buttons">
+      <button class="btn" id="success">Success</button>
+      <button class="btn" id="error">Error</button>
+      <button class="btn" id="error">HELLO</button>
+    </div>
+    <form method="POST" action="test">
+		{% csrf_token %}
+	<label for="type">Choose type task:</label>
+	<select name="type">
+	  <option value="doing" >Task in processing</option>
+	  <option value="donot" >Task do not finish</option>
+	</select><br>
+	<button type="submit">Submit</button>
+	</form>
+	<a href="/">Home</a>
+
+</body>
+</html>
