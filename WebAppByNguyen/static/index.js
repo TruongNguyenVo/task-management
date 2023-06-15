@@ -1,4 +1,7 @@
 window.onload = function(){
+
+
+
 	var delayInMilliseconds = 1000; //1 second
 	setTimeout(function() {
 	  	function myFunction() {
@@ -49,4 +52,12 @@ window.onload = function(){
 	    btn.addEventListener("click", () => createToast(btn.id));
 	});
 };
+
+
+
+
+
+
+
+
 

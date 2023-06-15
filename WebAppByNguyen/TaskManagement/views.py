@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from .models import TaskCreation
+from .models import TaskCreation, Account
 from datetime import datetime
-from django.contrib.auth.models import User, auth
-from django.shortcuts import redirect
 from django.utils.datastructures import MultiValueDictKeyError
 from time import time
+
+#user register
+from django.shortcuts import redirect 
+from django.contrib.auth.models import User, auth
+from django.contrib import messages
+
 #my models
 from .modelsByNguyen import *	
 # Create your views here.
@@ -194,12 +198,105 @@ def editTask(request, id):
 
 	return HttpResponse(template.render(context, request))
 def test(request):
+	user = request.user
 	if request.method == "POST":
 		typeTask = request.POST.get('type')
 	else:
 		typeTask = "doing"
 	template = loader.get_template("template.html")
 	context = {
-			'temp' : typeTask,
+			'temp' : [typeTask]
 		}
 	return HttpResponse(template.render(context, request))
+
+
+def register(request):
+	template = loader.get_template("register.html")
+	message = ""
+	
+	if request.method == "POST":
+		# lấy user, password và password2 ở trang register
+		user = request.POST['user']
+		password = request.POST['pass']
+		password2 = request.POST['pass2']
+
+
+		# nếu hai pass và pass2 giống nhau
+		if password == password2:
+			# nếu user đã có
+			if Account.objects.filter(user = user).exists():
+				message = "User already used!"
+				# return redirect('register')
+
+			# nếu hai password giống nhau và user chưa tồn tại thì tạo tài khoản
+			else:
+				# database ngoài
+				new_user = Account(
+									user = user,
+									pw = password)
+				new_user.save()
+
+				# database của django
+				save_user = User.objects.create_user(username = user, email= "", password = password)
+				save_user.save()
+				message = "Register already successful!"
+				return HttpResponse(loader.get_template("login.html").render({'user':user,'password' : password}, request))			
+
+		# nếu hai pass và pass2 khác nhau
+		else:
+			message = "password is not same!"
+			# return render(request,"register.html")
+	
+	# nếu người dùng chưa điền hết thông tin
+	else:
+		messages = "Fill all form!"
+		# return render(request,"register.html")
+	context = {
+		'message' : message,
+		}
+	
+
+	return HttpResponse(template.render(context, request))
+
+
+
+def login(request):
+	template = loader.get_template("login.html")
+	user = request.user.username
+	messages = ""
+	if request.method == 'POST':
+		#lấy user và password ở trang login
+		username = request.POST['user']
+		password = request.POST['pass']
+
+		# xác thực lần 1
+		authentic = Account.objects.filter(user = username, pw = password).exists()
+
+		# nếu xác thực thành công
+		if authentic == True:
+			# xác thực lần 2
+			user = auth.authenticate(username = username, password = password)
+			if user is not None:
+				auth.login(request,user)
+				return redirect('/')
+			else:
+				messages = f'User or Password is incorrect! {username} {password} {user} else in'
+		else:
+			messages = f'User or Password is incorrect! {username} {password} {user} else out'
+	# else:
+	# 	return render(request, 'login.html',{'user': "", 'password' : "",})
+	
+	context = {
+		'message' : [messages],
+		'user': "", 
+		'password' : "",
+	}
+	return HttpResponse(template.render(context, request))
+
+def logout(request):
+	auth.logout(request)
+	context = {
+		'user' : "",
+		'password' : "",
+	}
+	return render(request, 'index.html', context)

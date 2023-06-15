@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+	<script src="{% static 'index.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+	 {% if user.is_authenticated %}
+    <h1>Hello {{user.username}}. You are loginning! </h1>
+      {% csrf_token %}
+    <a href="logout">Log Out</a><br>      
+<!--  nếu user chưa log in -->
+  {% else %}
+    <h1>Hello guy. Please login page!</h1>
+      {% csrf_token %}
+      <a href="login">Log In</a><br>      
+  {% endif %}
+	<form method="POST" action="login">
+		{% csrf_token %}
+		<label for="user">User: </label>
+		<input type="text" name="user" id="user" value="{{user}}">
+		<br>
+
+		<label for="pass">Password: </label>
+		<input type="password" name="pass" id="pass" value="{{password}}">
+		<br>
+<!-- 		hide - show password -->
+		<input type="checkbox" name="" onclick="show_hide_pass()">Show Password</input>
+		<br>
+
+		<input type="submit" name="submit" value="Submit">
+	</form>
+
+
+	<a href="/">Home</a>
+	<h1>Messages: {{message}}</h1>
+<script>
+	// hàm hiển thị hoặc ẩn của password
+function show_hide_pass(){
+		var id_pass = document.getElementById('pass');
+
+
+		if(id_pass.type === "password" ){
+			id_pass.type = "text";
+		}
+		else{
+			id_pass.type = "password";
+		}
+	}
+
+</script>	
+
+</body>
+</html>

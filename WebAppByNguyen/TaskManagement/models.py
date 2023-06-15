@@ -2,6 +2,10 @@ from django.db import models
 from datetime import datetime, timedelta
 # Create your models here.
 
+class Account(models.Model):
+	user = models.CharField(max_length = 255) # tài khoản
+	pw = models.CharField(max_length = 255) # mật khẩu
+	type = models.CharField(max_length = 255, blank = True, default = "user") # loại của tài khoản đó (user, admin)
 class TaskCreation(models.Model): 
 	# tạo công việc
 	nameTask = models.CharField(max_length = 255) # tên
@@ -14,10 +18,12 @@ class TaskCreation(models.Model):
 	phoneUser = models.CharField(max_length = 255, blank = True)
 	note = models.TextField( blank = True) # ghi chú
 	status = models.BooleanField(default = False)
+	username = models.CharField(max_length = 255, blank = True) # người tạo ra task
 
 class TaskAssignMent(models.Model):
 	 # phân công công việc
-	nameUser = models.CharField(max_length = 255) #người nhận task
+	user_give = models.CharField(max_length = 255) #người gửi task
+#	user_receive = models.CharField(max_length = 255) #người nhận task
 	emailUSer = models.EmailField(max_length = 255) # email người nhận task
 	phoneUser = models.CharField(max_length = 255, blank = True)
 	date = models.DateTimeField(default = datetime.now, blank = True) # lấy thời gian giao hiện tại, mặc định không thể sửa
@@ -32,7 +38,7 @@ class TaskTracking(models.Model):
 class TaskDone(models.Model): 
 # các task đã hoàn thành
 	name = models.CharField(max_length = 255) #tên task
-	nameUser = models.CharField(max_length = 255) #người hoàn thành task
+	username = models.CharField(max_length = 255) #người hoàn thành task
 	date = models.DateTimeField(max_length = 255) #thời gian hoàn thành
 
 class Reminder(models.Model): 
@@ -51,6 +57,6 @@ class MessageChat(models.Model):
 	#nội dung chat
 	data = models.TextField() # nội dung tin nhắn
 	date = models.DateTimeField(default = datetime.now, blank = True) # ngày, giờ gởi
-	userName = models.CharField(max_length = 255) # người gửi tin nhắn
+	username = models.CharField(max_length = 255) # người gửi tin nhắn
 	room = models.CharField(max_length = 255) # tên phòng
 
