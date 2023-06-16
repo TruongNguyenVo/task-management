@@ -17,7 +17,8 @@ from .modelsByNguyen import *
 def index(request):
 	return render(request, 'index.html')
 def createTask(request):
-	if request.method == 'POST':
+	user = request.user
+	if request.method == 'POST' and user.is_authenticated:
 		#get value in createtask.html
 		nameTask = request.POST['nameTask']
 		dataTask = request.POST['dataTask']
@@ -39,7 +40,8 @@ def createTask(request):
 								isImportant = isImportant,
 								emailUSer = emailUSer,
 								phoneUser = phoneUser,
-								note = note)
+								note = note,
+								username = user.username)
 		save_task.save()
 		context = {
 			'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,note]
@@ -49,16 +51,18 @@ def createTask(request):
 		return redirect('listTask')
 	else:
 		context = {
-			# 'temp' : "else"
+			'login' : "Login to create task"
 		}
 		return render(request, 'createtask.html', context)
 
 def listTask(request): #trang hiển thị các nhiệm vụ
+	
+	user = request.user
 	typeTask = 'doing'
 	if request.method == "POST":
 		typeTask = request.POST.get('type')
 	task_status = [] # gồm 3 tham số: name, status, timeRests
-	task_list = TaskCreation.objects.all()
+	task_list = TaskCreation.objects.all().filter(username = user.username)
 	time_now = datetime.now()
 	for task in task_list:
 		temp_task =[]
@@ -74,7 +78,8 @@ def listTask(request): #trang hiển thị các nhiệm vụ
 	
 	context = { 
 		'task_status': task_status,
-		'typeTask' : typeTask
+		'typeTask' : typeTask,
+
 	}
 	return HttpResponse(template.render(context, request)) 
 def getTask(request, id):
@@ -199,13 +204,19 @@ def editTask(request, id):
 	return HttpResponse(template.render(context, request))
 def test(request):
 	user = request.user
+	name = user.username
+	if user.is_authenticated:
+		temp = "Nguyen"
+	else:
+		temp = "Truong"
+
 	if request.method == "POST":
 		typeTask = request.POST.get('type')
 	else:
 		typeTask = "doing"
 	template = loader.get_template("template.html")
 	context = {
-			'temp' : [typeTask]
+			'temp' : [typeTask, temp,"1",TaskCreation.objects.all().filter(username = name)]
 		}
 	return HttpResponse(template.render(context, request))
 
@@ -237,7 +248,7 @@ def register(request):
 				new_user.save()
 
 				# database của django
-				save_user = User.objects.create_user(username = user, email= "", password = password)
+				save_user = User.objects.create_user(username = user, email= "", password = password, is_staff = True)
 				save_user.save()
 				message = "Register already successful!"
 				return HttpResponse(loader.get_template("login.html").render({'user':user,'password' : password}, request))			
@@ -270,17 +281,15 @@ def login(request):
 		password = request.POST['pass']
 
 		# xác thực lần 1
-		authentic = Account.objects.filter(user = username, pw = password).exists()
+		# authentic = Account.objects.filter(user = username, pw = password).exists()
 
 		# nếu xác thực thành công
-		if authentic == True:
-			# xác thực lần 2
-			user = auth.authenticate(username = username, password = password)
-			if user is not None:
-				auth.login(request,user)
-				return redirect('/')
-			else:
-				messages = f'User or Password is incorrect! {username} {password} {user} else in'
+		user = auth.authenticate(username = username, password = password)
+		# user_filter = Account.objects.all().filter(user = "vonguyen1").exists() # True-False
+
+		if user is not None:
+			auth.login(request,user)
+			return redirect('/')
 		else:
 			messages = f'User or Password is incorrect! {username} {password} {user} else out'
 	# else:

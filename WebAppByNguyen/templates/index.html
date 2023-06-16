@@ -16,12 +16,12 @@
     <a href="logout">Log Out</a><br>      
 <!--  nếu user chưa log in -->
   {% else %}
-    <h1>Hello guy. Please login page!</h1>
+    <h1>Hello {{user.username}}. Please login page!</h1>
       {% csrf_token %}
       <a href="login">Log In</a><br>      
   {% endif %}
-  
-	<h1>{{message}}</h1>
+
+	<h2>{{message}}</h2><br>
 	<a href="createTask">Create Task</a>
 
 <!-- 	<ul class="notifications"></ul>

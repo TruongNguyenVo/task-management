@@ -64,6 +64,17 @@
 	<a href="listTask">List Task Created</a><br>
 	<a href="/listTaskDone">List Task Done</a><br>
 	<a href="/">Home</a></div>
+
+	 {% if user.is_authenticated %}
+    <h1>User: {{user.username}}</h1>
+      {% csrf_token %}
+    <a href="logout">Log Out</a><br>      
+<!--  nếu user chưa log in -->
+  {% else %}
+      {% csrf_token %}
+      <h2><a href="login">{{login}}</a></h2><br>      
+  {% endif %}
+
 	</form>
 
 <!--     <div class="buttons">
