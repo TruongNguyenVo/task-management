@@ -120,7 +120,8 @@ def getTask(request, id):
 
 	return HttpResponse(template.render(context, request)) 
 def listTaskDone(request): #hàm trả về các task đã done hoặc hết hạn
-	task_list = TaskCreation.objects.all()
+	user = request.user
+	task_list = TaskCreation.objects.all().filter(username = user.username)
 	task_status = []
 	temp = ""
 	for task in task_list:
@@ -205,19 +206,29 @@ def editTask(request, id):
 def test(request):
 	user = request.user
 	name = user.username
-	if user.is_authenticated:
-		temp = "Nguyen"
-	else:
-		temp = "Truong"
-
-	if request.method == "POST":
-		typeTask = request.POST.get('type')
-	else:
-		typeTask = "doing"
-	template = loader.get_template("template.html")
 	context = {
-			'temp' : [typeTask, temp,"1",TaskCreation.objects.all().filter(username = name)]
-		}
+
+	}
+	template = loader.get_template("template.html")
+	# if user.is_authenticated:
+	# 	temp = "Nguyen"
+	# else:
+	# 	temp = "Truong"
+
+	# if request.method == "POST":
+	# 	typeTask = request.POST.get('type')
+	# else:
+	# 	typeTask = "doing"
+
+	# context = {
+	# 		'temp' : [typeTask, temp,"1",TaskCreation.objects.all().filter(username = name)]
+	# 	}
+
+	context.update(
+				# {'temp' : [getWeather()['status'],getWeather()['data']['Advice']] # [True, 'Mưa dông Thứ 7']
+				{
+				'temp' : [getWeather()['data']['Date']]
+				})
 	return HttpResponse(template.render(context, request))
 
 

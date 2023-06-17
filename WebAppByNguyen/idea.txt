@@ -1,1 +1,3 @@
 wheater api
+
+function Login require is_staff = True in create_user()
