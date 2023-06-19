@@ -14,7 +14,7 @@
 </head>
 <body>
 
-	<form method="POST" action="createTask">
+	<form method="POST" action="create">
 		{% csrf_token %}
 
 
@@ -61,8 +61,8 @@
     <button type="submit" class="btn" id="success" onclick="myFunction()">Create</button>
 </div>
 <div>
-	<a href="listTask">List Task Created</a><br>
-	<a href="/listTaskDone">List Task Done</a><br>
+	<a href="list-task">List Task Created</a><br>
+	<a href="/list-task-done">List Task Done</a><br>
 	<a href="/">Home</a></div>
 
 	 {% if user.is_authenticated %}

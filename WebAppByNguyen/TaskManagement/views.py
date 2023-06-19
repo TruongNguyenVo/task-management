@@ -4,12 +4,15 @@ from django.template import loader
 from .models import TaskCreation, Account
 from datetime import datetime
 from django.utils.datastructures import MultiValueDictKeyError
+from django.core.exceptions import ObjectDoesNotExist
 from time import time
+import json
 
 #user register
 from django.shortcuts import redirect 
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
+
 
 #my models
 from .modelsByNguyen import *	
@@ -83,27 +86,30 @@ def listTask(request): #trang hiển thị các nhiệm vụ
 	}
 	return HttpResponse(template.render(context, request)) 
 def getTask(request, id):
-
-	task = TaskCreation.objects.get(id = id)
+	# người dùng hiện tại
+	user =request.user
+	try:
+		task = TaskCreation.objects.get(id = id, username = user.username)
+	# nếu không có nhiệm vụ dó
+	except ObjectDoesNotExist:
+		return redirect("listTask")
 	template = loader.get_template("detailtask.html")
-
-
 	message = ""
-
 	try:
 	# nếu user click done task thì cập nhật finishDate và status
-		if request.POST["taskDone"] == "Done":
+		if request.POST["task"] == "Done":
 			delay(0.3)
 			task.finishDate = datetime.now()
 			task.status = True
 			task.save()
 			message = "task is successful !"
 			return redirect("listTaskDone")
-		# if request.POST["taskDont"] == "Dont":
-		# 	delay(0.3)
-		# 	task.status = False
-		# 	task.save()
-		# 	return redirect("listTaskDone")
+	# xóa task
+		if request.POST["task"] == "Delete":
+			delay(0.3)
+			task.delete()
+			message = "Deleted task !"
+			return redirect("listTask")
 	except MultiValueDictKeyError as e:
 			message = e
 	
@@ -120,22 +126,41 @@ def getTask(request, id):
 
 	return HttpResponse(template.render(context, request)) 
 def listTaskDone(request): #hàm trả về các task đã done hoặc hết hạn
+	
+
 	user = request.user
 	task_list = TaskCreation.objects.all().filter(username = user.username)
 	task_status = []
 	temp = ""
+	
+	# undone
+	nameTask = request.POST.get('nameTask')
+	if nameTask is not None:
+		# tách số id (request trả về chuỗi)
+		idTask = nameTask[len(nameTask) - 3 : - 1]
+		task_change = TaskCreation.objects.get(id = idTask)
+		# thay đổi về chưa hoàn thành
+		task_change.status = False
+		task_change.save()
+
 	for task in task_list:
 		if task.status == True:
 			tempTask = []
-			tempTask = [task.nameTask, task.dataTask, task.finishDate]
+			tempTask = {
+					'name' : task.nameTask, 
+					'data' : task.dataTask, 
+					'finish' :task.finishDate, 
+					'id' : task.id}
 			task_status.append(tempTask)
 			# temp = task.endDate
 	
+
 	context = {
 		'task_status' :task_status,
 		'temp' : temp,
 	}
 	template = loader.get_template('taskdone.html')
+
 	return HttpResponse(template.render(context, request)) 
 
 def editTask(request, id):
@@ -224,11 +249,19 @@ def test(request):
 	# 		'temp' : [typeTask, temp,"1",TaskCreation.objects.all().filter(username = name)]
 	# 	}
 
-	context.update(
-				# {'temp' : [getWeather()['status'],getWeather()['data']['Advice']] # [True, 'Mưa dông Thứ 7']
-				{
-				'temp' : [getWeather()['data']['Date']]
-				})
+	# context.update(
+	# 			# {'temp' : [getWeather()['status'],getWeather()['data']['Advice']] # [True, 'Mưa dông Thứ 7']
+	# 			{
+	# 			'temp' : [getWeather()['data']['Date']]
+	# 			})
+
+	try:
+		if request.POST["status"] == "undone":
+			context.update({
+				'temp' : "un done",
+			})
+	except MultiValueDictKeyError:
+		pass
 	return HttpResponse(template.render(context, request))
 
 
@@ -252,14 +285,14 @@ def register(request):
 
 			# nếu hai password giống nhau và user chưa tồn tại thì tạo tài khoản
 			else:
-				# database ngoài
+				# table ngoài
 				new_user = Account(
 									user = user,
 									pw = password)
 				new_user.save()
 
 				# database của django
-				save_user = User.objects.create_user(username = user, email= "", password = password, is_staff = True)
+				save_user = User.objects.create_user(username = user, email= "", password = password)
 				save_user.save()
 				message = "Register already successful!"
 				return HttpResponse(loader.get_template("login.html").render({'user':user,'password' : password}, request))			

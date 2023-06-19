@@ -7,7 +7,7 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-	 <form method="POST" action="listTask">
+	 <form method="POST" action="list-task">
 		{% csrf_token %}
 	<label for="type">Type task:</label>
 	<select name="type">
@@ -27,7 +27,7 @@
 	{% endcomment %}
 	{% if task.1 == False and task.2.0 > 0 %}
 <!-- 		hiện thị các task còn thời gian -->
-			<form method="POST" action="getTask">
+			<form method="POST" action="get-task">
 				<div>
 					<label>Name task: {{task.0}} --</label> 
 
@@ -40,14 +40,16 @@
 
 					<label>The rest of the time: {{task.2.0}} days {{task.2.1}} hours {{task.2.2}} minutes</label> <br>
 					
-					<a href="getTask/{{task.3}}">Detail task: {{task.0}}</a>
+					<a href="get-task/{{task.3}}">Detail task: {{task.0}}</a>
+					
+					
 				</div>
 				<br>
 			</form>
 			{% endif %}
 
 			{% endfor %}
-			<a href="/listTaskDone">List Task Done</a>
+			<a href="/list-task-done">List Task Done</a>
 			</form>
 	{% elif typeTask == 'donot' %} 
 				{% for task in task_status %}
@@ -56,21 +58,21 @@
 	{% endcomment %}
 	{% if task.2.0 < 0 and task.1 == False %}
 <!-- 		hiện thị các task còn thời gian -->
-			<form method="POST" action="getTask">
+			<form method="POST" action="get-task">
 				<div>
 					<label>Name task: {{task.0}} --</label> 
 					<label>Status: Do not finish task --</label>
 
 					<label>Time: {{task.2.0}} days {{task.2.1}} hours {{task.2.2}} minutes</label> <br>
 					
-					<a href="getTask/{{task.3}}">Detail task: {{task.0}}</a>
+					<a href="get-task/{{task.3}}">Detail task: {{task.0}}</a>
 				</div>
 				<br>
 			</form>
 			{% endif %}
 
 			{% endfor %}
-			<a href="/listTaskDone">List Task Done</a>
+			<a href="/list-task-done">List Task Done</a>
 			</form>
 	{% endif %}
 

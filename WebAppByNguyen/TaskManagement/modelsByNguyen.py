@@ -78,7 +78,6 @@ def getWeather(day = None, time = None,location = None):
 			'data' : error,
 		}
 
-print(type(getWeather()['data']['Date']))
 def voiceToText(voice = None):
 	
 	
