@@ -1,6 +1,16 @@
 from django.db import models
+from django import forms # model để up load file
 from datetime import datetime, timedelta
+from django.core.exceptions import ValidationError
 # Create your models here.
+
+# hàm kiểm tra đầu vào của đuôi file
+def validate_file_extension(value):
+	import os
+	ext = os.path.splitext(value.name)[1]
+	valid_extension = ['.doc','.docx','.pdf','.zip', '.txt'] # hỗ trợ các đuôi file văn bản và file nén
+	if not ext in valid_extension:
+		raise ValidationError(u'File not supported !')
 
 class Account(models.Model):
 	user = models.CharField(max_length = 255) # tài khoản
@@ -10,6 +20,8 @@ class TaskCreation(models.Model):
 	# tạo công việc
 	nameTask = models.CharField(max_length = 255) # tên
 	dataTask = models.TextField(max_length = 10000) #nội dung 
+	# upload file và kiểm tra đầu vào của file
+	file = models.FileField(upload_to = 'upload_files', validators = [validate_file_extension])
 	startDate = models.DateTimeField(default = datetime.now, blank = True) # ngày tạo task, lấy mặc định
 	endDate = models.DateTimeField() #ngày kết thúc task
 	finishDate = models.DateTimeField(default = datetime.now) # ngày hoàn thành 

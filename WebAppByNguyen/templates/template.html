@@ -61,6 +61,20 @@
 
 	<a href="/">Home</a>
 	<h1>Temp: {{temp}}</h1>
+	<textarea rows="20" cols="100">{{temp}}</textarea>
+
+	<form method="POST" action="download">
+		{% csrf_token %}
+		<label for="myfile">Upload file :</label>
+		<input type="file" name="myfile">		
+	</form><br>
+
+<!-- 	form download file -->
+	<form method="GET" action="download">
+		<a href="download">Download url: download/{{ temp.file }}</a>
+		<button type="submit" name="download" value="{{temp.file}}">Download</button>
+	</form>
+
 
 <script>
 	// hàm hiển thị hoặc ẩn của password

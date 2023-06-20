@@ -7,6 +7,9 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import ObjectDoesNotExist
 from time import time
 import json
+import os
+from django.conf import settings
+from django.http import HttpResponse, Http404
 
 #user register
 from django.shortcuts import redirect 
@@ -255,14 +258,52 @@ def test(request):
 	# 			'temp' : [getWeather()['data']['Date']]
 	# 			})
 
-	try:
-		if request.POST["status"] == "undone":
-			context.update({
-				'temp' : "un done",
-			})
-	except MultiValueDictKeyError:
-		pass
+	# try:
+	# 	if request.POST["status"] == "undone":
+	# 		context.update({
+	# 			'temp' : "un done",
+	# 		})
+	# except MultiValueDictKeyError:
+	# 	pass
+
+	
+	print()
+	path = TaskCreation.objects.all()[0].file.path
+
+	print()
+	with open(TaskCreation.objects.all()[0].file.path, "r", encoding = "utf8") as f: # đọc file theo tiếng việt
+		try:
+			data_file = f.read()
+		except Exception as e:
+			data_file = e
+	context = {
+		'temp' : {'data' : data_file,
+				 'path' : path,
+				 'file' : TaskCreation.objects.all()[0].file,}
+	}
+	# if request.POST['file'] == 'send':
+	# 	pass
+	
 	return HttpResponse(template.render(context, request))
+
+
+# hàm download file
+def download(request):
+	# đường dẫn của file
+	path = TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
+	
+	file_path = os.path.join(settings.MEDIA_ROOT, path)
+	if os.path.exists(file_path):
+		with open(file_path, 'rb') as fh:
+			response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+			response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+			return response
+	raise Http404
+	# context = {
+	# 	"temp" : TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
+	# }
+	# template = loader.get_template("template.html")
+	# return HttpResponse(template.render(context, request))
 
 
 def register(request):
