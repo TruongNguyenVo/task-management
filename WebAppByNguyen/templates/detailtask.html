@@ -38,6 +38,17 @@
 		<a href="/edit-task/{{id}}">Edit</a>	
 	</div>
 	</form>
+	</label> <br>
+	<!-- 	form download file -->
+	<form method="GET" action="download">
+<!-- 		title -->
+		<p>Name : {{file}}</p>
+		<button type="submit" name="download" value="{{file}}">Download</button>
+	</form>
 
 </body>
 </html>
+
+
+<!-- http://127.0.0.1:8000/download?download=upload_files%2Ftest_django_VMheK40.txt
+http://127.0.0.1:8000/get-task/download?download=test_django.txt -->

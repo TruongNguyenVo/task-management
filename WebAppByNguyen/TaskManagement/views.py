@@ -28,6 +28,7 @@ def createTask(request):
 		#get value in createtask.html
 		nameTask = request.POST['nameTask']
 		dataTask = request.POST['dataTask']
+		fileTask = request.POST['fileTask']
 		endDate = request.POST['endDate']
 
 		try:
@@ -41,7 +42,8 @@ def createTask(request):
 		note = request.POST['note']
 		save_task = TaskCreation(
 								nameTask = nameTask, 
-								dataTask= dataTask, 
+								dataTask= dataTask,
+								file = f"upload_files/{fileTask}", 
 								endDate = endDate,
 								isImportant = isImportant,
 								emailUSer = emailUSer,
@@ -50,7 +52,7 @@ def createTask(request):
 								username = user.username)
 		save_task.save()
 		context = {
-			'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,note]
+			'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,fileTask,note]
 		}
 		#	['task 1', 'Detail task 1', '2023-05-18T23:09', 'on', 'lammai.0407@gmail.com', '0944058941', 'can than']
 		delay(0.3)
@@ -58,6 +60,7 @@ def createTask(request):
 	else:
 		context = {
 			'login' : "Login to create task"
+
 		}
 		return render(request, 'createtask.html', context)
 
@@ -119,6 +122,7 @@ def getTask(request, id):
 	context = {
 		'nameTask' : task.nameTask,
 		'dataTask' : task.dataTask,
+		'file' : task.file,
 		'startDate' : task.startDate,
 		'endDate' : task.endDate,
 		'isImportant' : task.isImportant,
@@ -188,6 +192,7 @@ def editTask(request, id):
 	context = {
 		'nameTask' : task.nameTask,
 		'dataTask' : task.dataTask,
+		'file' : task.file,
 		'endDate' : task.endDate,
 		'isImportant' : task.isImportant,
 		'phoneUser': task.phoneUser,
@@ -281,6 +286,8 @@ def test(request):
 				 'path' : path,
 				 'file' : TaskCreation.objects.all()[0].file,}
 	}
+
+
 	# if request.POST['file'] == 'send':
 	# 	pass
 	
@@ -290,17 +297,24 @@ def test(request):
 # hàm download file
 def download(request):
 	# đường dẫn của file
-	path = TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
+
+	path = TaskCreation.objects.filter(file = request.GET['download'])[0].file.path # lọc đường dẫn theo tên file, tên người 
 	
-	file_path = os.path.join(settings.MEDIA_ROOT, path)
-	if os.path.exists(file_path):
-		with open(file_path, 'rb') as fh:
-			response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
-			response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
-			return response
-	raise Http404
+	try:
+		file_path = os.path.join(settings.MEDIA_ROOT, path)
+		if os.path.exists(file_path):
+			with open(file_path, 'rb') as fh:
+				response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
+				response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+				return response
+		raise Http404
+	except MultiValueDictKeyError:
+		pass
+
+	# temp = request.GET['download']
 	# context = {
-	# 	"temp" : TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
+	# 	# "temp" : TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
+	# 	"temp" : [temp,path]
 	# }
 	# template = loader.get_template("template.html")
 	# return HttpResponse(template.render(context, request))

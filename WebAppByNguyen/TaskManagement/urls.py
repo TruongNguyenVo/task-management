@@ -12,6 +12,7 @@ urlpatterns =[
 	path('register', views.register, name= 'register'),
 	path('login', views.login, name= 'login'),
 	path('logout', views.logout, name= 'logout'),
+	path('get-task/download', views.download, name = 'download'),
 	path('download', views.download, name = 'download'),
 	# path('detailTask/<str:task>/', views.getTask, name = 'getTask'),
 ]

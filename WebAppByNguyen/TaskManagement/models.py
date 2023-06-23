@@ -20,8 +20,9 @@ class TaskCreation(models.Model):
 	# tạo công việc
 	nameTask = models.CharField(max_length = 255) # tên
 	dataTask = models.TextField(max_length = 10000) #nội dung 
-	# upload file và kiểm tra đầu vào của file
-	file = models.FileField(upload_to = 'upload_files', validators = [validate_file_extension])
+	# upload file (thư mục upload_files/) và kiểm tra đầu vào của file
+	username = models.CharField(max_length = 255, blank = True) # người tạo ra task
+	file = models.FileField(upload_to = f'upload_files', validators = [validate_file_extension], null = True, blank = True)
 	startDate = models.DateTimeField(default = datetime.now, blank = True) # ngày tạo task, lấy mặc định
 	endDate = models.DateTimeField() #ngày kết thúc task
 	finishDate = models.DateTimeField(default = datetime.now) # ngày hoàn thành 
@@ -30,7 +31,7 @@ class TaskCreation(models.Model):
 	phoneUser = models.CharField(max_length = 255, blank = True)
 	note = models.TextField( blank = True) # ghi chú
 	status = models.BooleanField(default = False)
-	username = models.CharField(max_length = 255, blank = True) # người tạo ra task
+	
 
 class TaskAssignMent(models.Model):
 	 # phân công công việc

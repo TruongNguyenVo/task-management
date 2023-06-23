@@ -71,7 +71,8 @@
 
 <!-- 	form download file -->
 	<form method="GET" action="download">
-		<a href="download">Download url: download/{{ temp.file }}</a>
+<!-- 		title -->
+		<p>Name : {{temp.file}}</p>
 		<button type="submit" name="download" value="{{temp.file}}">Download</button>
 	</form>
 
