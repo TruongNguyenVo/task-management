@@ -34,7 +34,7 @@
 	</select><br>
 	<button type="submit">Submit</button>
 	</form> }-->
-	<form method="POST" action="register">
+<!-- 	<form method="POST" action="register">
 		{% csrf_token %}
 		<label for="user">User: </label>
 		<input type="text" name="user">
@@ -45,10 +45,10 @@
 		<br>
 
 		<label for="pass2">Re-password: </label>
-		<input type="password" name="pass2" id="pass2">
+		<input type="password" name="pass2" id="pass2"> -->
 		<br>
 <!-- 		hide - show password -->
-		<input type="checkbox" name="" onclick="show_hide_pass()">Show Password</input>
+<!-- 		<input type="checkbox" name="" onclick="show_hide_pass()">Show Password</input>
 		<br>
 
 		<input type="submit" name="submit" value="Submit">
@@ -58,25 +58,32 @@
 		{% csrf_token %}
 		<button type="submit" name="status" value="undone">Undone</button>
 	</form>
-
-	<a href="/">Home</a>
+ -->
+<!-- 	<a href="/">Home</a>
 	<h1>Temp: {{temp}}</h1>
-	<textarea rows="20" cols="100">{{temp}}</textarea>
+	<textarea rows="20" cols="100">{{temp}}</textarea> -->
 
-	<form method="POST" action="download">
+<!-- 	<form method="POST">
 		{% csrf_token %}
 		<label for="myfile">Upload file :</label>
-		<input type="file" name="myfile">		
-	</form><br>
+		{{ form.as_p }}
+		<input type="file" name="myfile">
+		<input type="submit">		
+	</form><br> -->
 
 <!-- 	form download file -->
-	<form method="GET" action="download">
-<!-- 		title -->
+<!-- 	<form method="GET" action="download">
 		<p>Name : {{temp.file}}</p>
 		<button type="submit" name="download" value="{{temp.file}}">Download</button>
-	</form>
-
-
+	</form> -->
+	<!--  -->
+		<form method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			<input type="file" name="fileTask">
+			<input type="submit" name="" value="Submit">
+			
+		</form>
+		<h1>{{temp}}</h1>
 <script>
 	// hàm hiển thị hoặc ẩn của password
 function show_hide_pass(){

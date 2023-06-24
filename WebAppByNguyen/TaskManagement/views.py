@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from .models import TaskCreation, Account
+
 from datetime import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,6 +11,9 @@ import json
 import os
 from django.conf import settings
 from django.http import HttpResponse, Http404
+
+# file
+from datetime import datetime, timedelta # time
 
 #user register
 from django.shortcuts import redirect 
@@ -20,6 +24,87 @@ from django.contrib import messages
 #my models
 from .modelsByNguyen import *	
 # Create your views here.
+def test(request):
+	user = request.user
+	name = user.username
+	context = {
+
+	}
+	
+	# if user.is_authenticated:
+	# 	temp = "Nguyen"
+	# else:
+	# 	temp = "Truong"
+
+	# if request.method == "POST":
+	# 	typeTask = request.POST.get('type')
+	# else:
+	# 	typeTask = "doing"
+
+	# context = {
+	# 		'temp' : [typeTask, temp,"1",TaskCreation.objects.all().filter(username = name)]
+	# 	}
+
+	# context.update(
+	# 			# {'temp' : [getWeather()['status'],getWeather()['data']['Advice']] # [True, 'Mưa dông Thứ 7']
+	# 			{
+	# 			'temp' : [getWeather()['data']['Date']]
+	# 			})
+
+	# try:
+	# 	if request.POST["status"] == "undone":
+	# 		context.update({
+	# 			'temp' : "un done",
+	# 		})
+	# except MultiValueDictKeyError:
+	# 	pass
+
+	
+	# print()
+	# path = TaskCreation.objects.all()[0].file.path
+
+	# print()
+	# # with open(TaskCreation.objects.all()[0].file.path, "r", encoding = "utf8") as f: # đọc file theo tiếng việt
+	# # 	try:
+	# # 		data_file = f.read()
+	# # 	except Exception as e:
+	# # 		data_file = e
+	# file = ""
+	# if request.method == "POST":
+	# 	file = request.POST["myfile"]
+
+	# task_save = TaskCreation(file = file, endDate = "2023-06-23 21:46:36.544131+00")
+	# task_save.save()
+	# context = {
+	# 	'temp' : {'data' : file,
+	# 			 'path' : path,
+	# 			 'file' : TaskCreation.objects.all()[0].file,}
+	# }
+
+
+
+	# if request.POST['file'] == 'send':
+	# 	pass
+	
+
+	# if request.method == "POST":
+	# 	try:
+	# 		file_save = request.FILES["fileTask"]
+	# 		save = Document.objects.create(file = file_save)
+	# 		save.save()
+	# 		print()
+	# 		print("DONEEEEEEEEEEEEEEEE")
+	# 		print()
+	# 	except 	MultiValueDictKeyError:
+	# 		print()
+	# 		print("NGHIIIIIIIIIIIIIIIIi")
+	# 		print()
+
+
+
+	template = loader.get_template("template.html")
+	return HttpResponse(template.render(context, request))
+
 def index(request):
 	return render(request, 'index.html')
 def createTask(request):
@@ -28,7 +113,8 @@ def createTask(request):
 		#get value in createtask.html
 		nameTask = request.POST['nameTask']
 		dataTask = request.POST['dataTask']
-		fileTask = request.POST['fileTask']
+		file_save = request.FILES["fileTask"]
+
 		endDate = request.POST['endDate']
 
 		try:
@@ -43,7 +129,7 @@ def createTask(request):
 		save_task = TaskCreation(
 								nameTask = nameTask, 
 								dataTask= dataTask,
-								file = f"upload_files/{fileTask}", 
+								file = file_save,
 								endDate = endDate,
 								isImportant = isImportant,
 								emailUSer = emailUSer,
@@ -52,7 +138,7 @@ def createTask(request):
 								username = user.username)
 		save_task.save()
 		context = {
-			'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,fileTask,note]
+			'temp' : [nameTask,dataTask,endDate,isImportant,emailUSer,phoneUser,file_save,note]
 		}
 		#	['task 1', 'Detail task 1', '2023-05-18T23:09', 'on', 'lammai.0407@gmail.com', '0944058941', 'can than']
 		delay(0.3)
@@ -236,62 +322,7 @@ def editTask(request, id):
 		return redirect('listTask')
 
 	return HttpResponse(template.render(context, request))
-def test(request):
-	user = request.user
-	name = user.username
-	context = {
 
-	}
-	template = loader.get_template("template.html")
-	# if user.is_authenticated:
-	# 	temp = "Nguyen"
-	# else:
-	# 	temp = "Truong"
-
-	# if request.method == "POST":
-	# 	typeTask = request.POST.get('type')
-	# else:
-	# 	typeTask = "doing"
-
-	# context = {
-	# 		'temp' : [typeTask, temp,"1",TaskCreation.objects.all().filter(username = name)]
-	# 	}
-
-	# context.update(
-	# 			# {'temp' : [getWeather()['status'],getWeather()['data']['Advice']] # [True, 'Mưa dông Thứ 7']
-	# 			{
-	# 			'temp' : [getWeather()['data']['Date']]
-	# 			})
-
-	# try:
-	# 	if request.POST["status"] == "undone":
-	# 		context.update({
-	# 			'temp' : "un done",
-	# 		})
-	# except MultiValueDictKeyError:
-	# 	pass
-
-	
-	print()
-	path = TaskCreation.objects.all()[0].file.path
-
-	print()
-	with open(TaskCreation.objects.all()[0].file.path, "r", encoding = "utf8") as f: # đọc file theo tiếng việt
-		try:
-			data_file = f.read()
-		except Exception as e:
-			data_file = e
-	context = {
-		'temp' : {'data' : data_file,
-				 'path' : path,
-				 'file' : TaskCreation.objects.all()[0].file,}
-	}
-
-
-	# if request.POST['file'] == 'send':
-	# 	pass
-	
-	return HttpResponse(template.render(context, request))
 
 
 # hàm download file
@@ -311,13 +342,21 @@ def download(request):
 	except MultiValueDictKeyError:
 		pass
 
-	# temp = request.GET['download']
-	# context = {
-	# 	# "temp" : TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
-	# 	"temp" : [temp,path]
-	# }
-	# template = loader.get_template("template.html")
-	# return HttpResponse(template.render(context, request))
+
+	# with open(path.path, "r", encoding = "utf8") as f: # đọc file theo tiếng việt
+	# 	try:
+	# 		data_file = f.read()
+	# 	except Exception as e:
+	# 		data_file = e
+
+
+	temp = request.GET['download']
+	context = {
+		# "temp" : TaskCreation.objects.filter(file = request.GET['download'])[0].file.path
+		"temp" : [temp,file_path]
+	}
+	template = loader.get_template("template.html")
+	return HttpResponse(template.render(context, request))
 
 
 def register(request):

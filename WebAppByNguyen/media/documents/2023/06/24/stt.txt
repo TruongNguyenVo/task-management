@@ -1,0 +1,24 @@
+Các bu?c th?c hi?n:
+Quy trình t?n công DDOS website b?ng CMD nhu sau:
+
+Bu?c 1: Tìm d?a ch? IP website.
+B?n s? d?ng cú pháp này trong CMD d? tìm IP c?a m?t website b?t k?.
+
+ Ping www.temien.com -t . Trong dó “www.tenmien.com” là website c?a d?i tu?ng c?n DDOS.
+
+N?u không bi?t cách m? CMD thì b?n ch? vi?c gõ vào ô tìm ki?m trên thanh START ký t? “CMD” là du?c.
+
+Bu?c 2: M? CMD và ch?y l?nh
+Trong CMD b?n gõ l?nh code dánh s?p website :
+
+ping [xxx.xxx.xxx.xxx] -t -l 65500
+Trong dó xxx.xxx.xxx.xxx là d?a ch? IP c?a trang web c?n t?n công.
+
+Bu?c 3: Ð?i và quan sát
+Bây gi?, vi?c c?a b?n là d?i xem trang web dang b? DDOS.
+
+Bu?c 4: Thành công
+Khi nào b?n truy c?p website dó và nh?n du?c thông báo “máy ch? không ho?t d?ng“ ho?c “trang web t?m th?i” thì quá trình dã thành công.
+
+Ðây là cách DDOS trang web don gi?n nh?t, nhung dôi lúc nó cung khó thành công vì máy nhà bang thông quá y?u nên không th? t?n công du?c ngu?i ta.
+https://www.tiktok.com/@sao.bongda/video/7030648622484081947

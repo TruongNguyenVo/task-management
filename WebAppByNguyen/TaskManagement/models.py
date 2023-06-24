@@ -11,7 +11,7 @@ def validate_file_extension(value):
 	valid_extension = ['.doc','.docx','.pdf','.zip', '.txt'] # hỗ trợ các đuôi file văn bản và file nén
 	if not ext in valid_extension:
 		raise ValidationError(u'File not supported !')
-
+	
 class Account(models.Model):
 	user = models.CharField(max_length = 255) # tài khoản
 	pw = models.CharField(max_length = 255) # mật khẩu
@@ -21,8 +21,8 @@ class TaskCreation(models.Model):
 	nameTask = models.CharField(max_length = 255) # tên
 	dataTask = models.TextField(max_length = 10000) #nội dung 
 	# upload file (thư mục upload_files/) và kiểm tra đầu vào của file
+	file = models.FileField(upload_to='documents/%Y/%m/%d/', blank = True, default = None) # data file
 	username = models.CharField(max_length = 255, blank = True) # người tạo ra task
-	file = models.FileField(upload_to = f'upload_files', validators = [validate_file_extension], null = True, blank = True)
 	startDate = models.DateTimeField(default = datetime.now, blank = True) # ngày tạo task, lấy mặc định
 	endDate = models.DateTimeField() #ngày kết thúc task
 	finishDate = models.DateTimeField(default = datetime.now) # ngày hoàn thành 
