@@ -113,9 +113,19 @@ def createTask(request):
 		#get value in createtask.html
 		nameTask = request.POST['nameTask']
 		dataTask = request.POST['dataTask']
-		file_save = request.FILES["fileTask"]
+		# lấy file 
+		try:
+			file_save = request.FILES["fileTask"]
+		# nếu không có file thì None
+		except MultiValueDictKeyError:
+			file_save = None
 
-		endDate = request.POST['endDate']
+		# lấy ngày kết thúc nhiệm vụ
+		try:
+			endDate = request.POST['endDate']
+		# nếu không có thì lấy ngày mặc định là sau 1 ngày
+		except ValidationError:
+			endDate = datetime.now()
 
 		try:
 			if request.POST['isImportant'] == 'on': 
@@ -447,3 +457,113 @@ def logout(request):
 		'password' : "",
 	}
 	return render(request, 'index.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# A P I 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import AccountSerializer
+
+	# if request.method == 'GET':
+	# 	pass
+	# elif request.method == 'POST':
+	# 	pass
+
+	# elif request.method == "DELETE":
+	# 	pass
+	# elif request.method == "PUT":
+	# 	pass
+
+# GET - view
+# POST - create
+# DELETE - delete
+# PUT - update
+
+@api_view(['GET'])
+def getData(request):
+	# data -> dictionary (json)
+
+	user = Account.objects.get(user = request.user.username)
+	data_user = {
+		'account' : user.user,
+		'password' : user.pw,
+		'type' :user.type,
+	}
+
+
+	task = TaskCreation.objects.all()[1]
+	data_task = {
+		'name' : task.nameTask,
+		'data' :task.dataTask,
+		'detail' : task.note,
+		'day create' : task.startDate.strftime("%m/%d/%Y, %H:%M:%S"),
+		'day end' : task.endDate.strftime("%m/%d/%Y, %H:%M:%S"),
+		'status' : task.status
+
+	}
+	data = {
+		'user' : data_user,
+		'task' : data_task,
+		'time get' : datetime.now()
+
+	}
+
+	return Response(data['task'])
+
+@api_view(['GET','POST'])
+def postData(request):
+	if request.method == "GET":
+		user = Account.objects.get(user = request.user.username)
+		data_user = {
+				'account' : user.user,
+				'password' : user.pw,
+				'type' :user.type,
+		}
+		data = {
+			'user' : data_user,
+			'time get' : datetime.now()
+
+		}
+		return Response(data)
+
+	elif request.method == "POST":
+		serializer = AccountSerializer(data = request.data)
+		if serializer.is_valid():
+			print()
+			print(serializer)
+			print()
+			return Response({
+				"statement" : "IF",
+				"time post" : datetime.now()
+			})
+		else:
+			data = {
+				"statement" : "ELSE",
+				"time post" :datetime.now()
+			}
+			return Response(data)
+
+@api_view(["DELETE"])
+def deleteData(request):
+	data = {
+		"API" :"DELETE",
+		"time" : datetime.now()
+	}
+	return Response(data)
+
+@api_view(['PUT'])
+def putData(request, id):
+	pass

@@ -8,6 +8,18 @@ from datetime import datetime, timedelta
 import requests
 import json
 
+def restAPI():
+	pass
+
+def sendMail(sender = None, messages = None, recevier = None):
+	return {
+		'sender' : sender,
+		'data' : messages,
+		'recevier' : recevier,
+		'time' : datetime.now()
+	}
+
+# print(sendMail(messages = "HELLO"))
 
 def delay(timeDelay):
 	time.sleep(float(timeDelay))
@@ -38,9 +50,10 @@ def connectDB():
 	return temp
 
 # connectDB()
-def fiveDayAfter():
-	return datetime.now() + timedelta(days=5)
+def oneDayAfter():
+	return datetime.now() + timedelta(days=1)
 
+# print(oneDayAfter())
 #hàm lấy thời tiết
 def getWeather(day = None, time = None,location = None):
 	try:
