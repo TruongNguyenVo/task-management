@@ -383,7 +383,7 @@ def register(request):
 		# nếu hai pass và pass2 giống nhau
 		if password == password2:
 			# nếu user đã có
-			if Account.objects.filter(user = user).exists():
+			if Account.objects.filter(username = user).exists():
 				message = "User already used!"
 				# return redirect('register')
 
@@ -391,8 +391,9 @@ def register(request):
 			else:
 				# table ngoài
 				new_user = Account(
-									user = user,
-									pw = password)
+									username = user,
+									password = password,
+									api_token = randomToken(user))
 				new_user.save()
 
 				# database của django
@@ -475,7 +476,7 @@ def logout(request):
 # A P I 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import AccountSerializer
+from .serializers import AccountSerializer, TaskCreationAPISerializer
 
 	# if request.method == 'GET':
 	# 	pass
@@ -487,75 +488,139 @@ from .serializers import AccountSerializer
 	# elif request.method == "PUT":
 	# 	pass
 
-# GET - view
-# POST - create
-# DELETE - delete
-# PUT - update
+	# GET - view
+	# POST - create
+	# DELETE - delete
+	# PUT - update
 
 @api_view(['GET'])
-def getData(request):
-	# data -> dictionary (json)
+def getData(request, api_token):
+#	# data -> dictionary (json)
+	# print(Account.objects.get(api_token = api_token))
 
-	user = Account.objects.get(user = request.user.username)
-	data_user = {
-		'account' : user.user,
-		'password' : user.pw,
-		'type' :user.type,
-	}
-
-
-	task = TaskCreation.objects.all()[1]
-	data_task = {
-		'name' : task.nameTask,
-		'data' :task.dataTask,
-		'detail' : task.note,
-		'day create' : task.startDate.strftime("%m/%d/%Y, %H:%M:%S"),
-		'day end' : task.endDate.strftime("%m/%d/%Y, %H:%M:%S"),
-		'status' : task.status
-
-	}
-	data = {
-		'user' : data_user,
-		'task' : data_task,
-		'time get' : datetime.now()
-
-	}
-
-	return Response(data['task'])
-
-@api_view(['GET','POST'])
-def postData(request):
-	if request.method == "GET":
-		user = Account.objects.get(user = request.user.username)
+	try:
+		user = Account.objects.get(api_token = api_token)
 		data_user = {
-				'account' : user.user,
-				'password' : user.pw,
-				'type' :user.type,
+			'account' : user.username,
+			'type' :user.type,
 		}
+
+		get_task = TaskCreation.objects.filter(username = user.username)
+		list_task = []
+		for task in get_task:
+			data_task = {
+				'name' : task.nameTask,
+				'data' :task.dataTask,
+				'detail' : task.note,
+				'day create' : task.startDate.strftime("%m/%d/%Y, %H:%M:%S"),
+				'day end' : task.endDate.strftime("%m/%d/%Y, %H:%M:%S"),
+				'status' : task.status
+
+			}
+			list_task.append(data_task)
 		data = {
 			'user' : data_user,
-			'time get' : datetime.now()
+			'task' : list_task,
+			'time' : datetime.now()
 
 		}
-		return Response(data)
+	except Exception as e: 
+		data = {
+		"status" : e,
+		}
+	
+	return Response(data)
 
-	elif request.method == "POST":
+@api_view(['POST'])
+def postInfor(request):
+
+	# đăng nhập bằng API lấy type người dung
+	if request.method == "POST":
 		serializer = AccountSerializer(data = request.data)
+		# xác thực api
 		if serializer.is_valid():
-			print()
-			print(serializer)
-			print()
+			data_response = serializer.data
+			username = data_response['username']
+			password = data_response['password']
+			user = Account.objects.filter(username = username, password = password).exists()
+			if user == True:
+				account = Account.objects.get(username = username, password = password)
+				data = {
+				'status' : 'Đăng nhập thành công',
+				'username' : account.username,
+				'type' : account.type,
+				'token' : account.api_token,}
+			else:
+				data = {
+					'status' : 'Không tìm thấy tài khoản',
+					'user' : None,
+				}
 			return Response({
-				"statement" : "IF",
-				"time post" : datetime.now()
+				"data" : data,
+				"time" : datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 			})
 		else:
 			data = {
-				"statement" : "ELSE",
-				"time post" :datetime.now()
+				"data" : "Data thiếu hoặc chưa được xác thực",
+				"time" :datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 			}
 			return Response(data)
 
+# API dùng để tạo nhiệm vụ
+@api_view(['POST'])
+def postTask(request, api_token):
+	serializer =  TaskCreationAPISerializer(data = request.data)
+
+	# lấy username trong Account theo api_token
+	username = Account.objects.get(api_token = api_token).username
+	# gán giá trị nếu trong có giá trị truyền vào
+	if serializer.is_valid():
+		response_data = serializer.data
+		# lấy dữ liệu từ user
+		try:
+			name_task = response_data['nameTask']
+		except KeyError:
+			name_task = None
+		try:
+			data_task = response_data['dataTask']
+		except KeyError:
+			data_task = None
+		try:
+			end_date = response_data['endDate']
+		except KeyError:
+			end_date = None
+		try:
+			isImportant = response_data['isImportant']
+		except KeyError:
+			isImportant = None
+		try:
+			email_user = response_data['emailUSer']
+		except KeyError:
+			email_user = None
+		try:
+			phone_user = response_data['phoneUser']
+		except KeyError:
+			phone_user = None
+		try:
+			note = response_data['note']
+		except KeyError:
+			note = None
+
+		data = {
+			'status' :True,
+			'data' : [name_task,data_task,username,end_date,isImportant,email_user,phone_user,note],
+		}
+	else:
+		data = {
+			'status' :False,
+			'data' : None,
+
+		}
+
+	return Response({
+			'data' :data,
+			'time' :datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+		})
 @api_view(["DELETE"])
 def deleteData(request):
 	data = {

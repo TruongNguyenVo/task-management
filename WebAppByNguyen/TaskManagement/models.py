@@ -13,9 +13,10 @@ def validate_file_extension(value):
 		raise ValidationError(u'File not supported !')
 	
 class Account(models.Model):
-	user = models.CharField(max_length = 255) # tài khoản
-	pw = models.CharField(max_length = 255) # mật khẩu
+	username = models.CharField(max_length = 255) # tài khoản
+	password = models.CharField(max_length = 255) # mật khẩu
 	type = models.CharField(max_length = 255, blank = True, default = "user") # loại của tài khoản đó (user, admin)
+	api_token = models.CharField(max_length = 255, default = None) # token dùng để sử dụng API (cấu trúc: TMNG + username + random kí tự (7 kí tự))
 class TaskCreation(models.Model): 
 	# tạo công việc
 	nameTask = models.CharField(max_length = 255) # tên
@@ -32,6 +33,17 @@ class TaskCreation(models.Model):
 	note = models.TextField( blank = True) # ghi chú
 	status = models.BooleanField(default = False)
 	
+# dùng trong API
+class TaskCreationAPI(models.Model):
+	nameTask = models.CharField(max_length = 255) # tên
+	dataTask = models.TextField(max_length = 10000) #nội dung
+	# username = models.CharField(max_length = 255, blank = True) # người tạo ra task
+	endDate = models.IntegerField() # số ngày kết thúc kể từ ngày bắt đầu 
+	isImportant = models.BooleanField(default = False) # task có quan trong hay khong
+	emailUSer = models.EmailField(max_length = 255, blank = True) # email người nhận task
+	phoneUser = models.CharField(max_length = 255, blank = True)
+	note = models.TextField( blank = True) # ghi chú
+
 
 class TaskAssignMent(models.Model):
 	 # phân công công việc

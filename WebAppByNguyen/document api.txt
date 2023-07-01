@@ -1,0 +1,90 @@
+
+example :
+##### get information user (username, type) AND task (name,data,detail,day create, day end, status) ###
+
+url : http://127.0.0.1:8000/api.get/user&api_token={}
+method : GET
+
+-------------------> response <--------------------------
+
+{
+    "user": {
+        "account": "admin",
+        "type": "user"
+    },
+    "task": [
+        {
+            "name": "task 1",
+            "data": "data task 1",
+            "detail": "",
+            "day create": "07/01/2023, 19:42:24",
+            "day end": "07/08/2023, 12:42:40",
+            "status": false
+        },
+        {
+            "name": "task 2",
+            "data": "data task 2",
+            "detail": "",
+            "day create": "07/01/2023, 19:42:49",
+            "day end": "07/06/2023, 12:43:04",
+            "status": false
+        }
+    ],
+    "time": "2023-07-01T19:49:50.626306"
+}
+--------------------------------------------------------
+
+
+
+### information about username, type and token user ###
+
+url : http://127.0.0.1:8000/api.post/type/user
+method : POST
+data = {
+"username" : "admin",
+"password" : "1234"
+}
+-------------------> response <-----------------
+{
+    "data": {
+        "status": "Đăng nhập thành công",
+        "username": "admin",
+        "type": "user",
+        "token": "TMNGadminODnTHndC3GJndeevcOxH"
+    },
+    "time": "07/01/2023, 19:07:43"
+}
+
+------------------------------------------------
+
+### create task ###
+
+url: http://127.0.0.1:8000/api.post/type/create&api_token={token_user}
+method :POST
+data = {
+	"nameTask" : "task 1",
+	"dataTask" : "data task 1",
+	"endDate" : 3,
+	"isImportant" : "True",
+	"emailUSer" : "",
+	"phoneUser" :"",
+	"note" :""
+}
+--------------> response <--------------------
+{
+    "data": {
+        "status": true,
+        "data": [
+            "task 1",
+            "data task 1",
+            "admin",
+            3,
+            true,
+            "",
+            "",
+            ""
+        ]
+    },
+    "time": "07/01/2023, 10:29:02"
+}
+----------------------------------------------

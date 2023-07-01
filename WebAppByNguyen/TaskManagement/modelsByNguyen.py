@@ -8,8 +8,19 @@ from datetime import datetime, timedelta
 import requests
 import json
 
-def restAPI():
-	pass
+
+# Cấu trúc : TMNG + username + random kí tự (20 kí tự)
+def randomToken(username):
+	import random
+	import string
+
+	# random password gồm : chữ in, thường và số
+	characters = string.ascii_letters + string.digits
+	random_char = ''.join(random.choice(characters) for i in range(20))
+	api_token = 'TMNG' + username + random_char
+	return api_token
+
+print(randomToken('admin'))
 
 def sendMail(sender = None, messages = None, recevier = None):
 	return {
