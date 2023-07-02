@@ -570,9 +570,15 @@ def postInfor(request):
 @api_view(['POST'])
 def postTask(request, api_token):
 	serializer =  TaskCreationAPISerializer(data = request.data)
-
 	# lấy username trong Account theo api_token
-	username = Account.objects.get(api_token = api_token).username
+	try:
+		username = Account.objects.get(api_token = api_token).username
+	# nếu không tìm thấy tài khoản
+	except:
+		return Response({
+				"status" : False,
+				"data" : "Không tìm thấy tài khoản! ( Find not account! )"
+			})
 	# gán giá trị nếu trong có giá trị truyền vào
 	if serializer.is_valid():
 		response_data = serializer.data
@@ -606,14 +612,17 @@ def postTask(request, api_token):
 		except KeyError:
 			note = None
 
+		"""
+		ĐOẠN CODE TẠO NHIỆM VỤ
+		"""
 		data = {
 			'status' :True,
-			'data' : [name_task,data_task,username,end_date,isImportant,email_user,phone_user,note],
+			'data' : "Tạo nhiệm vụ thành công ( Create task successful!)",
 		}
 	else:
 		data = {
 			'status' :False,
-			'data' : None,
+			'data' : "Data truyền vào không đúng định dạng! ( The data is not in the correct form! )",
 
 		}
 
@@ -622,12 +631,50 @@ def postTask(request, api_token):
 			'time' :datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 		})
 @api_view(["DELETE"])
-def deleteData(request):
+def deleteData(request, name_task, api_token):
+
 	data = {
-		"API" :"DELETE",
-		"time" : datetime.now()
+		"status" : False,
+		"name" : name_task,
+		"time" : datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 	}
-	return Response(data)
+	# lấy tên người dùng dựa vào api_token
+	try:
+		username = Account.objects.get(api_token = api_token).username
+		# nếu tài khoản tồn tại
+		try:
+			task = TaskCreation.objects.get(username = username, nameTask = name_task)
+			data.update({
+					"status" :True,
+					"user" : username,
+					"data" : "Xóa " + task.nameTask + " thành công!" + "( Delete " + task.nameTask +" successful!)"
+				})
+			"""
+			ĐOẠN CODE XÓA NHIỆM VỤ
+			task.delete()			
+			"""
+			return Response(data)
+		# nếu không có nhiệm vụ 
+		except Exception :
+			data.update({
+				"user" : username,
+				"data" : "Không tìm thấy nhiệm vụ! (Find not task!)"
+				})
+			return Response(data)
+
+	# nếu không có tài khoản dự vào username
+	except :
+		data.update({
+			"data" : "Không tìm thấy tài khoản!" + " (Find not account!)"
+			
+		})
+		return Response(data)
+	# lấy task theo name_task và api_token người dùng
+
+
+	
+	
+
 
 @api_view(['PUT'])
 def putData(request, id):

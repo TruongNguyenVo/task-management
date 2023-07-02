@@ -20,7 +20,7 @@ def randomToken(username):
 	api_token = 'TMNG' + username + random_char
 	return api_token
 
-print(randomToken('admin'))
+# print(randomToken('admin'))
 
 def sendMail(sender = None, messages = None, recevier = None):
 	return {

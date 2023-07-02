@@ -23,7 +23,7 @@ urlpatterns =[
 	path('api.get/user&api_token=<str:api_token>', views.getData, name = 'getData'),
 	path('api.post/type/user', views.postInfor, name = 'postInfor'), # api dùng tài khoản, mật khẩu để lấy token user
 	path('api.post/type/create&api_token=<str:api_token>', views.postTask, name = 'postTask'), # api dùng để tạo task
-	path('api.deleteData', views.deleteData, name = 'deleteData'),
+	path('api.delete/type/task=<str:name_task>&api_token=<str:api_token>', views.deleteData, name = 'deleteData'),
 	path('api.putData/<int:id>', views.putData, name = 'putData'),
 ]
 if settings.DEBUG:

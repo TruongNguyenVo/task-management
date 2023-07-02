@@ -1,10 +1,11 @@
-
-example :
 ##### get information user (username, type) AND task (name,data,detail,day create, day end, status) ###
 
-url : http://127.0.0.1:8000/api.get/user&api_token={}
+url : http://127.0.0.1:8000/api.get/user&api_token={api_token}
 method : GET
 
+-------------------> example <--------------------------
+url : http://127.0.0.1:8000/api.get/user&api_token=TMNGadminODnTHndC3GJndeevcOxH
+method :GET
 -------------------> response <--------------------------
 
 {
@@ -36,8 +37,17 @@ method : GET
 
 
 
-### information about username, type and token user ###
+################### information about username, type and token user ########
 
+url : http://127.0.0.1:8000/api.post/type/user
+method : POST
+
+data = {
+"username" : ,
+"password" : 
+}
+
+-------------------> example <------------------
 url : http://127.0.0.1:8000/api.post/type/user
 method : POST
 data = {
@@ -57,10 +67,22 @@ data = {
 
 ------------------------------------------------
 
-### create task ###
+############################ create task ####################
 
 url: http://127.0.0.1:8000/api.post/type/create&api_token={token_user}
 method :POST
+data = {
+	"nameTask" : ,
+	"dataTask" : ,
+	"endDate" : ,
+	"isImportant" ,
+	"emailUSer" : ,
+	"phoneUser" :,
+	"note" :
+}
+--------------------------------> example <------------------------------
+url : http://127.0.0.1:8000/api.post/type/create&api_token=TMNGadminODnTHndC3GJndeevcOxH
+method : POST
 data = {
 	"nameTask" : "task 1",
 	"dataTask" : "data task 1",
@@ -88,3 +110,29 @@ data = {
     "time": "07/01/2023, 10:29:02"
 }
 ----------------------------------------------
+
+
+
+##################### Delete the task #################################
+
+url : http://127.0.0.1:8000/api.delete/type/task={name_task}&api_token={api_token}
+method : DELETE
+------------------------> example <----------------------------
+
+url : http://127.0.0.1:8000/api.delete/type/task=task 1&api_token=TMNGadminODnTHndC3GJndeevcOxH
+method : DELETE
+------------------------>response <-----------------------------
+{
+    "status": true,
+    "name": "task 1",
+    "time": "07/02/2023, 20:21:17",
+    "user": "admin",
+    "data": "Xóa task 1 thành công!( Delete task 1 successful!)"
+}
+
+----------------------------------------------------------------
+
+
+
+
+
