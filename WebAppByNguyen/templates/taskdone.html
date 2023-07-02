@@ -1,8 +1,11 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Page Task Done</title>
+	<script src="{% static 'index.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'index.css' %}">
+	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -23,7 +26,11 @@
 		<!-- 	button undone -->
 	<form method="POST">
 		{% csrf_token %}
-		<button type="submit" name="nameTask" value="{{task}}">Undone</button>
+		<ul class="notifications"></ul>
+		<div class="buttons">
+    	<button type="submit" class="btn" id="success" onclick="myFunction()" name="nameTask" value="{{task.id}}">Undone</button>
+		</div>
+		
 	</form>
 	</div><br>
 	{% endfor %}

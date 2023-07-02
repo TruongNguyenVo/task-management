@@ -1,3 +1,5 @@
+﻿VIDEO DEMO : 
+
 ##### get information user (username, type) AND task (name,data,detail,day create, day end, status) ###
 
 url : http://127.0.0.1:8000/api.get/user&api_token={api_token}

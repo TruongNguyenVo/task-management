@@ -237,14 +237,15 @@ def listTaskDone(request): #hàm trả về các task đã done hoặc hết h�
 	temp = ""
 	
 	# undone
-	nameTask = request.POST.get('nameTask')
-	if nameTask is not None:
-		# tách số id (request trả về chuỗi)
-		idTask = nameTask[len(nameTask) - 3 : - 1]
+	try:
+		idTask = request.POST.get('nameTask')
 		task_change = TaskCreation.objects.get(id = idTask)
 		# thay đổi về chưa hoàn thành
 		task_change.status = False
 		task_change.save()
+		delay(0.3)
+	except: 
+		pass
 
 	for task in task_list:
 		if task.status == True:
